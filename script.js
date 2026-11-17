@@ -1,5 +1,22 @@
-// mobile menu
+// smooth in-page anchor scrolling (browsers don't always scroll anchors when overflow-x is on <html>)
 (function () {
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute("href").slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    // close mobile menu if open
+    var nav = document.querySelector("nav");
+    var btn = document.querySelector(".menu-btn");
+    if (nav) nav.classList.remove("open");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+    window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+    if (history && history.pushState) history.pushState(null, "", "#" + id);
+  });
+})();
   var btn = document.querySelector(".menu-btn");
   var nav = document.querySelector("nav");
   if (btn && nav) {
