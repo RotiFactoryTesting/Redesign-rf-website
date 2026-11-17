@@ -33,7 +33,7 @@ h3{font-size:1.35rem;font-weight:700}
 h4{font-size:1.1rem;font-weight:700}
 p{margin:0 0 1em}
 .container{max-width:var(--max);margin:0 auto;padding:0 24px}
-.section{padding:72px 0;position:relative}
+.section{padding:72px 0;position:relative;contain:layout paint}
 .section-alt{background:var(--bg-2)}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 
