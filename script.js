@@ -22,7 +22,7 @@
   onScroll();
 })();
 
-// contact form (Web3Forms)
+// contact form (Web3Forms) — only email + phone mandatory
 (function () {
   var form = document.getElementById("contact-form");
   if (!form) return;
@@ -37,8 +37,11 @@
     if (!phoneOk) phone.classList.add("invalid");
     if (!emailOk || !phoneOk) {
       var first = form.querySelector(".invalid"); if (first) first.focus();
+      var missing = [];
+      if (!emailOk) missing.push("a valid email");
+      if (!phoneOk) missing.push("a valid 10-digit phone number");
       status.className = "err";
-      status.textContent = "Please fill in " + (!emailOk ? "a valid email" : "") + ((!emailOk && !phoneOk) ? " and " : "") + (!phoneOk ? "a valid 10-digit phone number" : "") + ".";
+      status.textContent = "Please fill in " + missing.join(" and ") + ".";
       return;
     }
     var btn = form.querySelector("button[type=submit]");
@@ -62,9 +65,11 @@
   html.classList.add("js");
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   if (!("IntersectionObserver" in window)) return;
+
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
   }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+
   function tag(el, dir, delay) {
     if (!el || el.classList.contains("rv")) return;
     el.classList.add("rv");
@@ -72,8 +77,18 @@
     if (delay) el.style.animationDelay = delay + "ms";
     io.observe(el);
   }
-  document.querySelectorAll(".hero-content > *, .hero-stats > div").forEach(function (el, i) { tag(el, i % 2 === 0 ? "l" : "r", i * 120); });
+
+  // hero: text slides in (buttons are NOT animated — clickable immediately)
+  document.querySelectorAll(".hero-content > *").forEach(function (el, i) {
+    if (el.classList.contains("hero-actions")) return;
+    tag(el, i % 2 === 0 ? "l" : "r", i * 80);
+  });
+  document.querySelectorAll(".hero-stats > div").forEach(function (el, i) { tag(el, i % 2 === 0 ? "l" : "r", i * 80); });
+
+  // sections
   document.querySelectorAll("section .container > *, section .container .section-head > *").forEach(function (el) {
+    if (el.classList.contains("rv")) return;
+    if (el.classList.contains("hero-actions")) return;
     if (el.classList.contains("grid3") || el.classList.contains("grid2") || el.classList.contains("details-grid") || el.classList.contains("team-grid") || el.classList.contains("contact-grid") || el.classList.contains("client-grid")) {
       Array.prototype.forEach.call(el.children, function (c, i) { tag(c, i % 2 === 0 ? "l" : "r", Math.min(i * 110, 440)); });
     } else if (el.classList.contains("split-block")) {
@@ -84,12 +99,27 @@
       Array.prototype.forEach.call(el.children, function (c, i) { tag(c, null, i * 90); });
     } else { tag(el, null, 0); }
   });
+
+  // client logos wave
   document.querySelectorAll(".client-marquee, .client-grid img").forEach(function (el, i) { tag(el, i % 2 === 0 ? "l" : "r", Math.min(i * 40, 400)); });
+
+  // force hero action buttons visible immediately (clickable from first paint)
+  var ha = document.querySelector(".hero-actions");
+  if (ha) { ha.classList.remove("rv", "l", "r", "in"); ha.style.animationDelay = ""; ha.style.opacity = "1"; }
+
+  // reveal anything already in the viewport now that everything is tagged
+  requestAnimationFrame(function () {
+    document.querySelectorAll(".rv").forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("in");
+    });
+  });
+
   // safety net
   setTimeout(function () {
     document.querySelectorAll(".rv:not(.in)").forEach(function (el) {
       var r = el.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("in");
     });
-  }, 1500);
+  }, 150);
 })();
