@@ -1,22 +1,5 @@
-// smooth in-page anchor scrolling (browsers don't always scroll anchors when overflow-x is on <html>)
+// mobile menu
 (function () {
-  document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
-    if (!a) return;
-    var id = a.getAttribute("href").slice(1);
-    if (!id) return;
-    var target = document.getElementById(id);
-    if (!target) return;
-    e.preventDefault();
-    // close mobile menu if open
-    var nav = document.querySelector("nav");
-    var btn = document.querySelector(".menu-btn");
-    if (nav) nav.classList.remove("open");
-    if (btn) btn.setAttribute("aria-expanded", "false");
-    window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
-    if (history && history.pushState) history.pushState(null, "", "#" + id);
-  });
-})();
   var btn = document.querySelector(".menu-btn");
   var nav = document.querySelector("nav");
   if (btn && nav) {
@@ -28,6 +11,18 @@
       a.addEventListener("click", function () { nav.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); });
     });
   }
+})();
+
+// close mobile menu on any in-page anchor click; let the browser handle scrolling natively
+(function () {
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var nav = document.querySelector("nav");
+    var btn = document.querySelector(".menu-btn");
+    if (nav) nav.classList.remove("open");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  });
 })();
 
 // sticky nav state
