@@ -20,8 +20,8 @@
 
 /* ===== Reset ===== */
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:17px;overflow-x:hidden}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:17px}
 img{max-width:100%;display:block}
 a{color:var(--accent);text-decoration:none}
 ul{padding-left:1.2em;margin:0 0 1em}
