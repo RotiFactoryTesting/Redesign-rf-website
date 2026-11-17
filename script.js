@@ -102,7 +102,10 @@
     if (el.classList.contains("rv")) return;
     if (el.classList.contains("hero-actions")) return;
     if (el.classList.contains("grid3") || el.classList.contains("grid2") || el.classList.contains("details-grid") || el.classList.contains("team-grid") || el.classList.contains("contact-grid") || el.classList.contains("client-grid")) {
-      Array.prototype.forEach.call(el.children, function (c, i) { tag(c, i % 2 === 0 ? "l" : "r", Math.min(i * 110, 440)); });
+      Array.prototype.forEach.call(el.children, function (c, i) {
+        if (c.classList.contains("card")) return; // keep card buttons visible & clickable immediately
+        tag(c, i % 2 === 0 ? "l" : "r", Math.min(i * 110, 440));
+      });
     } else if (el.classList.contains("split-block")) {
       var kids = el.children;
       tag(kids[0], "l", 0);
